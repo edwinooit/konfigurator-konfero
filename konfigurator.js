@@ -1,7 +1,18 @@
-<!-- ═══ KONFERO KONFIGURATOR v2.1 — Webflow Embed ═══ -->
-<!-- Wklej cały ten kod w jeden blok "Embed" w Webflow -->
-<style>
-.kk * { margin: 0; padding: 0; box-sizing: border-box; }
+// ═══ KONFERO KONFIGURATOR v2.1 ═══
+// Samoładujący się skrypt.
+//
+// W Webflow Code Embed wklej:
+//   <div id="konfero-konfigurator"></div>
+//   <script src="https://cdn.jsdelivr.net/gh/edwinooit/konfigurator-konfero@main/konfigurator.js"></script>
+//
+// Edytujesz TYLKO ten plik na GitHubie → push → strona się aktualizuje.
+
+(function() {
+  'use strict';
+
+  // ─── Inject CSS ───
+  var style = document.createElement('style');
+  style.textContent = `.kk * { margin: 0; padding: 0; box-sizing: border-box; }
 .kk {
   --blue: #1c52a4;
   --blue-hover: #163f80;
@@ -278,12 +289,21 @@
   .kk-nav { flex-direction: column; }
   .kk-nav .kk-btn { justify-content: center; }
   .kk-float-in { flex-direction: column; gap: 8px; text-align: center; }
-}
-</style>
+}`;
+  document.head.appendChild(style);
 
-<div class="kk">
+  // ─── Inject HTML ───
+  var target = document.getElementById('konfero-konfigurator');
+  if (!target) {
+    var scripts = document.getElementsByTagName('script');
+    var thisScript = scripts[scripts.length - 1];
+    target = document.createElement('div');
+    target.id = 'konfero-konfigurator';
+    thisScript.parentNode.insertBefore(target, thisScript);
+  }
+  target.innerHTML = `<div class="kk">
 
-  <!-- Progress -->
+  
   <div class="kk-progress">
     <div class="kk-progress-inner">
       <div class="kk-pstep active" data-s="0" onclick="kkGoIf(0)"><span class="sn">1</span><span class="sl">Typ eventu</span></div>
@@ -295,7 +315,7 @@
 
   <div class="kk-main">
 
-    <!-- ═══ STEP 1 ═══ -->
+    
     <div class="kk-step visible" id="kk-s0">
       <div class="kk-header">
         <div class="kk-badge">Krok 1 z 4</div>
@@ -314,7 +334,7 @@
       </div>
     </div>
 
-    <!-- ═══ STEP 2 ═══ -->
+    
     <div class="kk-step" id="kk-s1">
       <div class="kk-header">
         <div class="kk-badge">Krok 2 z 4</div>
@@ -328,7 +348,7 @@
       </div>
     </div>
 
-    <!-- ═══ STEP 3 ═══ -->
+    
     <div class="kk-step" id="kk-s2">
       <div class="kk-header">
         <div class="kk-badge">Krok 3 z 4</div>
@@ -345,7 +365,7 @@
       </div>
     </div>
 
-    <!-- ═══ STEP 4 ═══ -->
+    
     <div class="kk-step" id="kk-s3">
       <div class="kk-header">
         <div class="kk-badge">Krok 4 z 4</div>
@@ -380,7 +400,7 @@
   </div>
 </div>
 
-<!-- Floating Price Bar -->
+
 <div class="kk-float kk" id="kk-float">
   <div class="kk-float-in">
     <div class="kk-float-info">
@@ -389,10 +409,9 @@
     </div>
     <button class="kk-btn kk-btn-p" style="padding:10px 28px;font-size:14px" id="kk-fbtn" onclick="kkFloatNext()">Dalej →</button>
   </div>
-</div>
+</div>`;
 
-<script>
-(function(){
+  // ─── Logic ───
   // ══════════════════════════════════════════
   // DATA — ceny wg cennika Konfero v2.0
   // ══════════════════════════════════════════
@@ -679,5 +698,3 @@
   // INIT
   rPkgs(); rDays();
 })();
-</script>
-<!-- ═══ END KONFERO KONFIGURATOR v2.0 ═══ -->
