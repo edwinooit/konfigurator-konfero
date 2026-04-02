@@ -41,7 +41,7 @@ Po pushu na `main`, czyść cache: `https://purge.jsdelivr.net/gh/edwinooit/konf
 
 Floating bar na dole strony pokazuje bieżącą kwotę.
 
-## Pakiety i ceny (v2.1)
+## Pakiety i ceny (v2.1) - na kwiecień 2026, mogą się zmienić w bliskiej przyszłości
 
 | Pakiet | Cena bazowa | Zawiera (wartość rynkowa) |
 |--------|------------|--------------------------|
@@ -91,3 +91,4 @@ Ceny netto + VAT 23%.
 - **Bronek Bujok** – zarząd Konfero, decyzje cenowe
 - **Andrzej Polok** – technika AV, perspektywa organizatora eventów
 - **Leszek Czyż** – zarząd, perspektywa biznesowa
+- **Piotr Pilch** - zarząd, perspektywa biznesowa
