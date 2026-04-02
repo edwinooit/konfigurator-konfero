@@ -1,4 +1,4 @@
-<!-- ═══ KONFERO KONFIGURATOR — Webflow Embed ═══ -->
+<!-- ═══ KONFERO KONFIGURATOR v2.1 — Webflow Embed ═══ -->
 <!-- Wklej cały ten kod w jeden blok "Embed" w Webflow -->
 <style>
 .kk * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -43,6 +43,7 @@
   color: #aaa; cursor: default;
   border-bottom: 3px solid transparent;
   transition: var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
 .kk-pstep.active { color: var(--blue); border-bottom-color: var(--blue); }
 .kk-pstep.done { color: var(--blue); border-bottom-color: var(--pastel); cursor: pointer; }
@@ -51,11 +52,12 @@
   width: 26px; height: 26px; border-radius: 50%;
   background: #e0e0e0; color: var(--white);
   font-size: 12px; font-weight: 700;
-  margin-right: 6px; vertical-align: middle;
+  flex-shrink: 0;
   transition: var(--transition);
 }
 .kk-pstep.active .sn, .kk-pstep.done .sn { background: var(--blue); }
 .kk-pstep.done .sn::after { content: '✓'; }
+.kk-pstep .sl { line-height: 1.2; }
 
 /* ─── MAIN ─── */
 .kk-main { max-width: 960px; margin: 0 auto; padding: 40px 24px 100px; }
@@ -108,6 +110,10 @@
 .kk-pkg .pr .f { font-size: 12px; color: var(--text-light); font-weight: 600; }
 .kk-pkg .pr .a { font-size: 28px; font-weight: 800; color: var(--blue); }
 .kk-pkg .pr .u { font-size: 13px; color: var(--text-light); font-weight: 500; }
+.kk-pkg .pr .old { font-size: 16px; font-weight: 600; color: #bbb; text-decoration: line-through; margin-right: 8px; }
+.kk-pkg .comp { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--gray-border); }
+.kk-pkg .comp span { display: block; font-size: 12px; color: var(--text-light); line-height: 1.8; padding-left: 0; position: relative; }
+.kk-pkg .comp span b { color: var(--text); font-weight: 600; float: right; }
 .kk-pkg .sb {
   position: absolute; top: 16px; right: 16px;
   background: var(--blue); color: var(--white);
@@ -185,8 +191,8 @@
 /* ─── SUMMARY ─── */
 .kk-sumcard { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
 .kk-sumhead { background: linear-gradient(135deg, var(--blue) 0%, #2a6fd6 100%); color: var(--white); padding: 32px; }
-.kk-sumhead h3 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-.kk-sumhead p { font-size: 14px; opacity: 0.8; }
+.kk-sumhead h3 { font-size: 24px; font-weight: 700; margin-bottom: 4px; color: var(--white); }
+.kk-sumhead p { font-size: 14px; color: var(--white); opacity: 1; }
 .kk-sumbody { padding: 32px; }
 .kk-sumline {
   display: flex; justify-content: space-between; align-items: center;
@@ -236,8 +242,8 @@
   background: linear-gradient(135deg, var(--blue) 0%, #2a6fd6 100%);
   border-radius: var(--radius); color: var(--white);
 }
-.kk-cta h3 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-.kk-cta p { font-size: 15px; opacity: 0.85; margin-bottom: 24px; max-width: 440px; margin-left: auto; margin-right: auto; }
+.kk-cta h3 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: var(--white); }
+.kk-cta p { font-size: 15px; color: var(--white); margin-bottom: 24px; max-width: 440px; margin-left: auto; margin-right: auto; }
 .kk-btn-cta { background: var(--white); color: var(--blue); border-color: var(--white); font-size: 16px; padding: 16px 48px; }
 .kk-btn-cta:hover { background: transparent; color: var(--white); }
 
@@ -262,8 +268,12 @@
   .kk-header h2 { font-size: 26px; }
   .kk-addon { flex-wrap: wrap; padding: 20px; }
   .kk-aprice { width: 100%; text-align: left; margin-top: 8px; }
-  .kk-pstep { font-size: 11px; padding: 12px 4px; }
-  .kk-pstep .sn { width: 22px; height: 22px; font-size: 10px; margin-right: 3px; }
+  .kk-pstep {
+    flex-direction: column; gap: 4px;
+    font-size: 11px; padding: 10px 4px 8px;
+  }
+  .kk-pstep .sn { width: 28px; height: 28px; font-size: 12px; }
+  .kk-pstep .sl { font-size: 10px; line-height: 1.2; }
   .kk-sumtotal .v { font-size: 26px; }
   .kk-nav { flex-direction: column; }
   .kk-nav .kk-btn { justify-content: center; }
@@ -276,10 +286,10 @@
   <!-- Progress -->
   <div class="kk-progress">
     <div class="kk-progress-inner">
-      <div class="kk-pstep active" data-s="0" onclick="kkGoIf(0)"><span class="sn">1</span> Typ eventu</div>
-      <div class="kk-pstep" data-s="1" onclick="kkGoIf(1)"><span class="sn">2</span> Upgrade'y</div>
-      <div class="kk-pstep" data-s="2" onclick="kkGoIf(2)"><span class="sn">3</span> Moduły</div>
-      <div class="kk-pstep" data-s="3" onclick="kkGoIf(3)"><span class="sn">4</span> Podsumowanie</div>
+      <div class="kk-pstep active" data-s="0" onclick="kkGoIf(0)"><span class="sn">1</span><span class="sl">Typ eventu</span></div>
+      <div class="kk-pstep" data-s="1" onclick="kkGoIf(1)"><span class="sn">2</span><span class="sl">Upgrade'y</span></div>
+      <div class="kk-pstep" data-s="2" onclick="kkGoIf(2)"><span class="sn">3</span><span class="sl">Moduły</span></div>
+      <div class="kk-pstep" data-s="3" onclick="kkGoIf(3)"><span class="sn">4</span><span class="sl">Podsumowanie</span></div>
     </div>
   </div>
 
@@ -290,17 +300,17 @@
       <div class="kk-header">
         <div class="kk-badge">Krok 1 z 4</div>
         <h2>Jaki event planujesz?</h2>
-        <p>Wybierz paczkę, która najlepiej pasuje do Twojego wydarzenia. Każda zawiera pełną bazę — sale, sprzęt AV, foyer i parking.</p>
+        <p>Wybierz pakiet, który najlepiej pasuje do Twojego wydarzenia. Każdy zawiera pełną bazę – sale, przestrzenie wspólne, foyer i parking.</p>
       </div>
       <div class="kk-pkgs" id="kk-pkgs"></div>
       <div class="kk-days" id="kk-days" style="display:none">
         <h4>Na ile dni potrzebujesz Konfero?</h4>
-        <div class="hint">Dodatkowe dni to lepsze stawki — im dłużej, tym korzystniej.</div>
+        <div class="hint">Dodatkowe dni to lepsze stawki – im dłużej, tym korzystniej.</div>
         <div class="kk-days-row" id="kk-drow"></div>
       </div>
       <div class="kk-nav">
         <div></div>
-        <button class="kk-btn kk-btn-p" id="kk-next0" disabled onclick="kkGo(1)">Dalej — wybierz upgrade'y →</button>
+        <button class="kk-btn kk-btn-p" id="kk-next0" disabled onclick="kkGo(1)">Dalej – wybierz dodatki →</button>
       </div>
     </div>
 
@@ -308,13 +318,13 @@
     <div class="kk-step" id="kk-s1">
       <div class="kk-header">
         <div class="kk-badge">Krok 2 z 4</div>
-        <h2>Podkręć poziom eventu</h2>
-        <p>Upgrade'y to usługi, które wywindują Twoje wydarzenie na wyższy level. Ekipa mediowa, kamerzysta, scenografia — wybierz, co pasuje.</p>
+        <h2>Dopasuj obiekt do potrzeb</h2>
+        <p>Dodatki to opcje, które rozszerzają Twój pakiet – obsługa techniczna, dodatkowe sale, dekoracja. Wybierz, co pasuje.</p>
       </div>
       <div class="kk-addons" id="kk-upg"></div>
       <div class="kk-nav">
         <button class="kk-btn kk-btn-g" onclick="kkGo(0)">← Wróć</button>
-        <button class="kk-btn kk-btn-p" onclick="kkGo(2)">Dalej — dodaj moduły →</button>
+        <button class="kk-btn kk-btn-p" onclick="kkGo(2)">Dalej – dodaj moduły →</button>
       </div>
     </div>
 
@@ -323,7 +333,7 @@
       <div class="kk-header">
         <div class="kk-badge">Krok 3 z 4</div>
         <h2>Dopasuj detale</h2>
-        <p>Catering, barista, tłumaczenia, strefa rodzinna — każdy moduł możesz dodać niezależnie od paczki. Twój event, Twoje zasady.</p>
+        <p>Catering, barista, tłumaczenia, strefa rodzinna – każdy moduł możesz dodać niezależnie od pakietu. Twój event, Twoje zasady.</p>
       </div>
       <div class="kk-slabel green">🍽️ Catering</div>
       <div class="kk-addons" id="kk-cat"></div>
@@ -340,26 +350,26 @@
       <div class="kk-header">
         <div class="kk-badge">Krok 4 z 4</div>
         <h2>Twój event w Konfero</h2>
-        <p>Sprawdź wszystko. Jeśli chcesz coś zmienić — wracaj śmiało do poprzednich kroków.</p>
+        <p>Sprawdź wszystko. Jeśli chcesz coś zmienić – wracaj śmiało do poprzednich kroków.</p>
       </div>
       <div class="kk-sumcard">
         <div class="kk-sumhead">
-          <h3 id="kk-sname">—</h3>
-          <p id="kk-sdesc">—</p>
+          <h3 id="kk-sname">–</h3>
+          <p id="kk-sdesc">–</p>
         </div>
         <div class="kk-sumbody" id="kk-sbody"></div>
         <div class="kk-sumtotal">
           <div class="l">Razem (netto)</div>
-          <div class="v" id="kk-stotal">— zł</div>
+          <div class="v" id="kk-stotal">– zł</div>
         </div>
         <div class="kk-sumnote">
           Podane ceny są orientacyjne i stanowią punkt wyjścia do rozmowy.<br>
-          Kwoty netto — do ceny należy doliczyć podatek VAT.
+          Kwoty netto – do ceny należy doliczyć podatek VAT 23%.
         </div>
       </div>
       <div class="kk-cta">
         <h3>Podoba Ci się ten setup?</h3>
-        <p>Skontaktuj się z nami — omówimy szczegóły, dopasujemy ofertę i zarezerwujemy termin dla Ciebie.</p>
+        <p>Skontaktuj się z nami – omówimy szczegóły, dopasujemy ofertę i zarezerwujemy termin dla Ciebie.</p>
         <a href="/kontakt" class="kk-btn kk-btn-cta">Skontaktuj się →</a>
       </div>
       <div class="kk-nav" style="justify-content:center">
@@ -384,79 +394,81 @@
 <script>
 (function(){
   // ══════════════════════════════════════════
-  // DATA
+  // DATA — ceny wg cennika Konfero v2.0
   // ══════════════════════════════════════════
   var PKGS = [
     {
       id:'konferencja', icon:'🎤', ic:'ic-conf',
       name:'Konferencyjna',
-      sub:'Konferencje, szkolenia, zjazdy, panele — główny produkt Konfero.',
-      inc:['Sala Diament (560 m², do 550 osób)','Ekran LED 4×8m + nagłośnienie','Oświetlenie LED + regulacja','Sala Silver (chillzone, 157 m²)','Foyer, parking (110 miejsc), Wi-Fi'],
-      base:9500,
+      sub:'Konferencje, szkolenia, zjazdy, panele – główny produkt Konfero.',
+      inc:['Sala Diament (560 m², do 450 osób)','Ekran LED 4×8 m + nagłośnienie','Oświetlenie LED + regulacja','Strefa wypoczynku 150 m²','Hol główny, parking (110 miejsc), Wi-Fi'],
+      comp:[{n:'Sala Diament 560 m²',v:4500},{n:'Ekran LED 4×8 m',v:2500},{n:'Nagłośnienie konferencyjne',v:1500},{n:'Oświetlenie LED sceny',v:1000}],
+      base:7000,
       upg:[
-        {id:'u-media',name:'Ekipa mediowa',desc:'Pełna obsługa techniczna ekranu, nagłośnienia i projektora — zero stresu.',price:2500,unit:'zł / dzień'},
-        {id:'u-camera',name:'Kamerzysta + montaż',desc:'Profesjonalne nagranie całego eventu + zmontowany materiał gotowy do publikacji.',price:3500,unit:'zł / dzień'},
-        {id:'u-stage',name:'Budowa sceny dedykowanej',desc:'Dodatkowa konstrukcja sceniczna — większa, podwyższona, z dedykowanym oświetleniem.',price:5000,unit:'zł'},
-        {id:'u-stream',name:'Streaming na żywo',desc:'Transmisja online z konferencji — kamera, realizacja, link do oglądania.',price:2000,unit:'zł / dzień'},
-        {id:'u-rooms',name:'Dodatkowe salki równoległe',desc:'Na breakout sessions, warsztaty, panele równoległe. Idealne dla wielotorowych formatów.',price:1500,unit:'zł / salka'}
+        {id:'u-tech',name:'Obsługa techniczna',desc:'Technik na miejscu przez cały dzień wydarzenia – zero stresu ze sprzętem.',price:1500,unit:'zł / dzień'},
+        {id:'u-scene',name:'Niestandardowa konfiguracja sceny',desc:'Ustawienie sceny według Twojego briefu – dedykowane podesty, układ, backstage.',price:1000,unit:'zł'},
+        {id:'u-sala120',name:'Dodatkowa sala (120 osób)',desc:'Sala Silver – warsztaty, breakout sessions, networking w kameralnej przestrzeni.',price:1000,unit:'zł / dzień'},
+        {id:'u-sala20',name:'Dodatkowa salka (20 osób)',desc:'Kameralna przestrzeń na spotkanie VIP, prelegentów lub zarządu.',price:400,unit:'zł / dzień'}
       ]
     },
     {
       id:'bankiet', icon:'🥂', ic:'ic-bank',
       name:'Bankietowa',
-      sub:'Wesela, bale, bankiety firmowe, wigilie, studniówki — wieczory, które zapamiętasz.',
-      inc:['Sala Diament (bankietowo, do 300 os.)','Sala Silver (strefa relaksu)','Kawiarnia Gold (120 miejsc, balkon)','Zaplecze kuchenne z pełnym dostępem','Nagłośnienie + oświetlenie standard'],
-      base:11000,
+      sub:'Bankiety firmowe, studniówki, gale – wieczory, które zapamiętasz.',
+      inc:['Sala Diament (bankietowo, do 300 os.)','Stoły i obrusy','Nagłośnienie + oświetlenie standard','Kawiarnia Gold (120 miejsc, balkon)','Strefa wypoczynku 150 m², Hol główny'],
+      comp:[{n:'Sala Diament (bankiet)',v:4500},{n:'Stoły i obrusy',v:1500},{n:'Nagłośnienie + oświetlenie',v:2000},{n:'Kawiarnia Gold',v:1500}],
+      base:8000,
       upg:[
-        {id:'u-lights',name:'Oświetlenie imprezowe',desc:'Ruchome lampy, efekty świetlne, oświetlenie parkietu — sprzęt zewnętrzny z obsługą.',price:3500,unit:'zł'},
-        {id:'u-dj',name:'Nagłośnienie imprezowe / DJ',desc:'Profesjonalny system audio na imprezę taneczną, realizator dźwięku lub DJ.',price:3000,unit:'zł'},
-        {id:'u-camera-b',name:'Kamerzysta + montaż',desc:'Film z wydarzenia — od ceremonii po parkiet. Gotowy materiał do publikacji.',price:3500,unit:'zł / dzień'},
-        {id:'u-decor',name:'Dekoracja sali',desc:'Aranżacja florystyczna, oświetlenie nastrojowe, elementy dekoracyjne.',price:4000,unit:'zł'},
-        {id:'u-waiter',name:'Obsługa kelnerska',desc:'Kelnerzy do serwowania posiłków i profesjonalnej obsługi gości.',price:2500,unit:'zł'}
+        {id:'u-guest100',name:'Liczba uczestników 100–200 – dopłata',desc:'Dopłata za większą grupę gości – dodatkowe ustawienie sali i obsługa.',price:1000,unit:'zł'},
+        {id:'u-guest200',name:'Liczba uczestników 200–300 – dopłata',desc:'Dopłata za ponad 200 gości – pełna konfiguracja sali na dużą imprezę.',price:2000,unit:'zł'},
+        {id:'u-kitchen',name:'Kuchnia z zapleczem',desc:'Pełen dostęp do kuchni – przygotowanie posiłków na miejscu przez Waszego cateringu.',price:2000,unit:'zł / dzień'},
+        {id:'u-decor',name:'Dekoracja sali',desc:'Wykorzystanie elementów dekoracyjnych dostępnych na obiekcie – aranżacja bez dodatkowego zakupu materiałów.',price:1800,unit:'zł'},
+        {id:'u-led-b',name:'Ekran LED 4×8 m',desc:'Wyświetlanie prezentacji, spotów, wizualizacji – efektowne tło dla Twojego wydarzenia.',price:1000,unit:'zł / dzień'}
       ]
     },
     {
       id:'event', icon:'🎸', ic:'ic-event',
-      name:'Eventowa / Koncertowa',
-      sub:'Koncerty, eventy firmowe, gale, imprezy integracyjne — energia i emocje.',
-      inc:['Sala Diament (eventowo, do 550 osób)','Ekran LED 4×8m (wizualizacje, tło)','Nagłośnienie konferencyjne','Oświetlenie LED statyczne','Sala Silver (chillzone, odpoczynek)'],
-      base:8500,
+      name:'Eventowa',
+      sub:'Eventy firmowe, gale, wigilijki, imprezy integracyjne – energia i emocje.',
+      inc:['Sala Diament (560 m², do 450 osób)','Ekran LED 4×8 m + nagłośnienie','Oświetlenie LED + regulacja','Strefa wypoczynku 150 m²','Hol główny, parking (110 miejsc), Wi-Fi'],
+      comp:[{n:'Sala Diament 560 m²',v:4500},{n:'Ekran LED 4×8 m',v:2500},{n:'Nagłośnienie konferencyjne',v:1500},{n:'Oświetlenie LED sceny',v:1000}],
+      base:7000,
       upg:[
-        {id:'u-ruch',name:'Oświetlenie ruchome / sceniczne',desc:'Ruchome lampy + efekty. Pełen sprzęt zewnętrzny z obsługą — Twoja scena, Twój show.',price:4500,unit:'zł'},
-        {id:'u-pa',name:'Nagłośnienie koncertowe',desc:'Profesjonalny system PA, realizator dźwięku na żywo — muzyka brzmi tak, jak powinna.',price:5000,unit:'zł'},
-        {id:'u-tech',name:'Ekipa techniczna',desc:'Zespół obsługujący całą technikę AV podczas eventu — Ty się cieszysz, oni ogarniają.',price:2500,unit:'zł / dzień'},
-        {id:'u-camera-e',name:'Kamerzysta + montaż',desc:'Relacja wideo z eventu, gotowa do publikacji. Każda emocja uchwycona.',price:3500,unit:'zł / dzień'},
-        {id:'u-backstage',name:'Garderoba / zaplecze',desc:'Pomieszczenia dla artystów, prelegentów i występujących — z pełnym komfortem.',price:1500,unit:'zł'}
+        {id:'u-tech-e',name:'Obsługa techniczna',desc:'Technik na miejscu przez cały dzień – nagłośnienie, oświetlenie, ekran LED pod kontrolą.',price:1500,unit:'zł / dzień'},
+        {id:'u-scene-e',name:'Niestandardowa konfiguracja sceny',desc:'Ustawienie sceny według Twojego briefu – dedykowane podesty, układ, backstage.',price:1000,unit:'zł'},
+        {id:'u-backstage',name:'Pomieszczenia dla prelegentów / zespołów',desc:'Garderoba, backstage, przygotowanie – komfort i prywatność przed wejściem na scenę.',price:400,unit:'zł / dzień'}
       ]
     },
     {
       id:'plener', icon:'🌿', ic:'ic-plen',
       name:'Plenerowa',
-      sub:'Targi, wystawy, pikniki firmowe, food truck festivals — na świeżym powietrzu.',
-      inc:['Cały teren zewnętrzny (trawa, las)','Boiska + plażówka wielofunkcyjna','Grillowisko + strefa grillowa','Podłączenie prądu (food trucki)','Chillzone (Silver) + foyer wewnątrz'],
-      base:7000,
+      sub:'Pikniki firmowe, festiwale na świeżym powietrzu – Twoje wydarzenie pod chmurką.',
+      inc:['Tereny trawiaste, lasek, boiska','Podłączenie do prądu (food trucki)','Strefa wypoczynku wewnątrz','Hol główny wewnątrz','Toalety wewnątrz'],
+      comp:[{n:'Tereny zewnętrzne + boiska',v:3000},{n:'Podłączenie do prądu',v:1000},{n:'Strefa wypoczynku wewnątrz',v:1500},{n:'Hol główny + toalety',v:1000}],
+      base:6000,
       upg:[
-        {id:'u-outdoor-pa',name:'Nagłośnienie zewnętrzne',desc:'System audio na tereny otwarte + obsługa technika. Muzyka niesie się po górach.',price:3500,unit:'zł'},
-        {id:'u-outdoor-stage',name:'Scena zewnętrzna',desc:'Konstrukcja sceniczna na zewnątrz — namiot sceniczny, podest, gotowe do show.',price:6000,unit:'zł'},
-        {id:'u-outdoor-light',name:'Oświetlenie terenu',desc:'Lampiony, oświetlenie ścieżek, reflektory na boiska — wieczór trwa dalej.',price:3000,unit:'zł'},
-        {id:'u-diament',name:'Dostęp do Sali Diament',desc:'Możliwość wejścia do sali wewnętrznej — na prelekcje, panele, wystawy.',price:4500,unit:'zł / dzień'},
-        {id:'u-tent',name:'Namiot eventowy',desc:'Duży namiot na boisku — plan B na niepogodę lub dodatkowa strefa VIP.',price:5500,unit:'zł'}
+        {id:'u-diament',name:'Sala Diament na prelekcje / wystawy',desc:'Dodatkowa przestrzeń wewnątrz – na panele, prezentacje, wystawy.',price:3000,unit:'zł / dzień'},
+        {id:'u-kino',name:'Kino letnie na świeżym powietrzu',desc:'Projekcja outdoorowa – filmy, prezentacje, transmisje pod gwiazdami.',price:2500,unit:'zł'},
+        {id:'u-tent',name:'Namiot na boisku (~100 osób)',desc:'Zadaszenie terenu zewnętrznego 6×12 m – plan B na niepogodę lub strefa VIP.',price:6000,unit:'zł'},
+        {id:'u-sauna',name:'Sauna – 2 godziny (do 12 osób)',desc:'Relaks po wydarzeniu – idealna na eventy integracyjne.',price:600,unit:'zł'}
       ]
     }
   ];
 
   var CAT = [
-    {id:'m-lunch',name:'Obiad / lunch',desc:'Porcjowane danie do stołów. Menu ustalane z naszą Sarą — smaki, które zapamiętasz.',price:85,unit:'zł / osoba',hq:1,ql:'osób',qd:150,qm:50,qs:10},
-    {id:'m-coffee',name:'Kawa — stały dostęp',desc:'Nieograniczona kawa dla wszystkich uczestników. Przerwa kawowa, która nigdy się nie kończy.',price:35,unit:'zł / osoba',hq:1,ql:'osób',qd:150,qm:50,qs:10},
-    {id:'m-coffee-l',name:'Kawa — na litry (10l)',desc:'Termos 10 litrów. Sprawdzony format na duże grupy i szybkie przerwy.',price:180,unit:'zł / 10 litrów',hq:1,ql:'termosów',qd:3,qm:1,qs:1},
-    {id:'m-banquet',name:'Serwis bankietowy',desc:'Pełny serwis kolacji na talerzach. Elegancja, którą goście poczują od pierwszego kęsa.',price:150,unit:'zł / osoba',hq:1,ql:'osób',qd:150,qm:50,qs:10},
-    {id:'m-kolocz',name:'Kołocz śląski',desc:'5 smaków regionalnego przysmaku. Autentyczny Śląsk na talerzu.',price:45,unit:'zł / sztuka',hq:1,ql:'sztuk',qd:5,qm:1,qs:1}
+    {id:'m-lunch',name:'Obiad / lunch / kolacja – bufet',desc:'Forma bufetowa, porcelana, szkło, sztućce – pełna obsługa dla Twoich gości.',price:35,unit:'zł / osoba',hq:1,ql:'osób',qd:100,qm:20,qs:10},
+    {id:'m-coffee',name:'Kawa przelewowa – bez limitu',desc:'Nieograniczony dostęp do kawy na 1 uczestnika. Przerwa kawowa, która nigdy się nie kończy.',price:10,unit:'zł / osoba',hq:1,ql:'osób',qd:100,qm:20,qs:10},
+    {id:'m-coffee-l',name:'Kawa przelewowa – termos 10 l',desc:'Ok. 60 porcji kawy w termosie. Sprawdzony format na duże grupy i szybkie przerwy.',price:150,unit:'zł / termos',hq:1,ql:'termosów',qd:2,qm:1,qs:1},
+    {id:'m-tea',name:'Herbata – termos 10 l',desc:'Wrzątek + herbata do wyboru. Ciepło w każdej przerwie.',price:40,unit:'zł / termos',hq:1,ql:'termosów',qd:2,qm:1,qs:1},
+    {id:'m-cake',name:'Ciasto deserowe',desc:'Domowe ciasta w Kawiarni Gold – idealne na słodki akcent przerwy.',price:15,unit:'zł / osoba',hq:1,ql:'osób',qd:100,qm:20,qs:10}
   ];
 
   var SRV = [
-    {id:'m-barista',name:'Barista w Gold',desc:'Profesjonalny barista w naszej kawiarni Gold. Flat white z widokiem na Beskidy.',price:1200,unit:'zł / dzień'},
-    {id:'m-translate',name:'Tłumaczenie symultaniczne',desc:'3 kabiny tłumaczy z widokiem na salę. Twój event bez barier językowych.',price:3500,unit:'zł / dzień'},
-    {id:'m-family',name:'Strefa rodzinna',desc:'Pokój zabaw + pokój matki karmiącej. Twoi goście mogą przyjechać z rodziną.',price:2000,unit:'zł / dzień'}
+    {id:'m-barista',name:'Obsługa kawiarni',desc:'Profesjonalny barista w Kawiarni Gold. Flat white z widokiem na Beskidy.',price:800,unit:'zł / dzień'},
+    {id:'m-waiter',name:'Obsługa kelnerska',desc:'Profesjonalna obsługa przy stołach – kelnerzy na cały dzień wydarzenia.',price:2000,unit:'zł / dzień'},
+    {id:'m-trans50',name:'Tłumaczenia symultaniczne – do 50 osób',desc:'Kabina + sprzęt przenośny (komplet). Twój event bez barier językowych.',price:1500,unit:'zł / dzień'},
+    {id:'m-trans50p',name:'Tłumaczenia symultaniczne – powyżej 50 osób',desc:'Kabina + zewnętrzny sprzęt: 1 500 zł bazowo + 15 zł za każdą osobę. Skontaktuj się po wycenę.',price:1500,unit:'zł + 15 zł/os.',hq:1,ql:'osób',qd:100,qm:51,qs:10},
+    {id:'m-family',name:'Pokój zabaw + pokój matki karmiącej',desc:'Przestrzeń familyjna – Twoi goście mogą przyjechać z dziećmi.',price:400,unit:'zł / dzień'}
   ];
 
   var ALL_MOD = CAT.concat(SRV);
@@ -476,13 +488,16 @@
   function rPkgs(){
     var g=document.getElementById('kk-pkgs');
     g.innerHTML=PKGS.map(function(p){
+      var cv=0; p.comp.forEach(function(c){cv+=c.v;});
+      var compHtml=p.comp.map(function(c){return '<span>'+c.n+'<b>'+fp(c.v)+' zł</b></span>'}).join('');
       return '<div class="kk-pkg'+(S.pkg===p.id?' sel':'')+'" onclick="kkSelPkg(\''+p.id+'\')">'
         +'<div class="sb">Wybrano ✓</div>'
         +'<div class="kk-pkg-icon '+p.ic+'">'+p.icon+'</div>'
         +'<h3>'+p.name+'</h3>'
         +'<div class="sub">'+p.sub+'</div>'
         +'<div class="inc">'+p.inc.map(function(i){return '<span>'+i+'</span>'}).join('')+'</div>'
-        +'<div class="pr"><span class="f">od</span><span class="a">'+fp(p.base)+'</span><span class="u">zł netto / dzień</span></div>'
+        +'<div class="comp">'+compHtml+'</div>'
+        +'<div class="pr"><span class="old">'+fp(cv)+' zł</span><span class="a">'+fp(p.base)+'</span><span class="u">zł netto / dzień</span></div>'
         +'</div>';
     }).join('');
   }
@@ -499,7 +514,7 @@
   // RENDER DAYS
   // ══════════════════════════════════════════
   function rDays(){
-    var ds=[{n:1,l:'1 dzień',d:''},{n:2,l:'2 dni',d:'-20% za 2. dzień'},{n:3,l:'3 dni',d:'-25% za 3. dzień'},{n:4,l:'4 dni',d:'-25% za 3.+ dzień'},{n:5,l:'5 dni',d:'-25% za 3.+ dzień'}];
+    var ds=[{n:1,l:'1 dzień',d:''},{n:2,l:'2 dni',d:'–20% za 2. dzień'},{n:3,l:'3 dni',d:'–25% za 3. dzień'},{n:4,l:'4 dni',d:'–25% za 3.+ dzień'},{n:5,l:'5 dni',d:'–25% za 3.+ dzień'}];
     document.getElementById('kk-drow').innerHTML=ds.map(function(d){
       return '<button class="kk-dbtn'+(S.days===d.n?' active':'')+'" onclick="kkSelDay('+d.n+')">'
         +d.l+(d.d?'<span class="dt">'+d.d+'</span>':'')+'</button>';
@@ -579,7 +594,8 @@
     Object.keys(S.mod).forEach(function(mid){
       var m=getMod(mid); if(!m) return;
       var q=S.qty[mid]||1;
-      if(m.hq) mt+=m.price*q;
+      if(mid==='m-trans50p'){ mt+=1500*S.days+15*q; }
+      else if(m.hq) mt+=m.price*q;
       else if(m.unit.indexOf('dzień')>-1) mt+=m.price*S.days;
       else mt+=m.price;
     });
@@ -597,12 +613,13 @@
   // ══════════════════════════════════════════
   function rSum(){
     var p=getPkg(); if(!p) return;
-    document.getElementById('kk-sname').textContent='Paczka '+p.name+' '+p.icon;
+    document.getElementById('kk-sname').textContent='Pakiet '+p.name+' '+p.icon;
     document.getElementById('kk-sdesc').textContent=p.sub;
     var t=calc(); var h='';
-    h+='<div class="kk-stitle">Baza — wynajem obiektu</div>';
+    var cv=0; p.comp.forEach(function(c){cv+=c.v;});
+    h+='<div class="kk-stitle">Baza – wynajem obiektu</div>';
     if(S.days===1){
-      h+=sLine(p.name+' — 1 dzień',fp(p.base)+' zł');
+      h+=sLine(p.name+' – 1 dzień <small>(wartość osobno: '+fp(cv)+' zł)</small>',fp(p.base)+' zł');
     } else {
       h+=sLine('Dzień 1 (stawka podstawowa)',fp(p.base)+' zł');
       if(S.days>=2) h+=sLine('Dzień 2 <small>(–20%)</small>',fp(p.base*0.8)+' zł','disc');
@@ -610,7 +627,7 @@
     }
     var uKeys=Object.keys(S.upg);
     if(uKeys.length){
-      h+='<div class="kk-stitle" style="margin-top:20px">Upgrade\'y</div>';
+      h+='<div class="kk-stitle" style="margin-top:20px">Dodatki do pakietu</div>';
       uKeys.forEach(function(uid){
         var u=p.upg.find(function(x){return x.id===uid});
         if(u){
@@ -626,7 +643,8 @@
       mKeys.forEach(function(mid){
         var m=getMod(mid); if(!m) return;
         var q=S.qty[mid]||1; var tot,det;
-        if(m.hq){ tot=m.price*q; det=' <small>('+q+' × '+fp(m.price)+' zł)</small>'; }
+        if(mid==='m-trans50p'){ tot=1500*S.days+15*q; det=' <small>(1 500 zł × '+S.days+' dni + '+q+' os. × 15 zł)</small>'; }
+        else if(m.hq){ tot=m.price*q; det=' <small>('+q+' × '+fp(m.price)+' zł)</small>'; }
         else if(m.unit.indexOf('dzień')>-1){ tot=m.price*S.days; det=' <small>(× '+S.days+' dni)</small>'; }
         else{ tot=m.price; det=''; }
         h+=sLine(m.name+det,fp(tot)+' zł');
@@ -662,4 +680,4 @@
   rPkgs(); rDays();
 })();
 </script>
-<!-- ═══ END KONFERO KONFIGURATOR ═══ -->
+<!-- ═══ END KONFERO KONFIGURATOR v2.0 ═══ -->
