@@ -10,6 +10,12 @@
 (function() {
   'use strict';
 
+  // ─── Konfiguracja wysyłki emailem ───
+  // Test:  'https://flow.rocksoft.co/webhook-test/konfero-kalkulacja'
+  // Prod:  'https://flow.rocksoft.co/webhook/konfero-kalkulacja'
+  var WEBHOOK_URL   = 'https://flow.rocksoft.co/webhook/konfero-kalkulacja';
+  var TURNSTILE_KEY = 'WKLEJ_TUTAJ_SITE_KEY'; // z dash.cloudflare.com → Turnstile
+
   // ─── Inject CSS ───
   var style = document.createElement('style');
   style.textContent = `.kk * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -289,8 +295,70 @@
   .kk-nav { flex-direction: column; }
   .kk-nav .kk-btn { justify-content: center; }
   .kk-float-in { flex-direction: column; gap: 8px; text-align: center; }
+}
+
+/* ─── FORMULARZ EMAIL ─── */
+.kk-emailform {
+  margin-top: 32px;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 36px 32px;
+}
+.kk-form-header { margin-bottom: 28px; }
+.kk-form-header h3 {
+  font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 8px;
+}
+.kk-form-header p { font-size: 14px; color: var(--text-light); line-height: 1.6; }
+.kk-form-fields {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
+}
+.kk-field { display: flex; flex-direction: column; gap: 6px; }
+.kk-field-full { grid-column: 1 / -1; }
+.kk-label { font-size: 13px; font-weight: 700; color: var(--text); }
+.kk-opt { font-weight: 400; color: var(--text-light); }
+.kk-input {
+  padding: 12px 16px;
+  border: 2px solid var(--gray-border);
+  border-radius: var(--radius);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px; color: var(--text);
+  transition: border-color .2s;
+  outline: none; background: var(--white);
+  width: 100%; box-sizing: border-box;
+}
+.kk-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(28,82,164,.08);
+}
+.kk-input.kk-err { border-color: #e53e3e; }
+.kk-textarea { resize: vertical; min-height: 80px; }
+.kk-form-actions { margin-bottom: 12px; }
+.kk-form-status {
+  margin-top: 16px; padding: 14px 20px;
+  border-radius: var(--radius);
+  font-size: 14px; font-weight: 600; line-height: 1.5;
+}
+.kk-form-status.ok {
+  background: #e6f7ee; color: #2d8a56; border: 1px solid #b7e4c7;
+}
+.kk-form-status.err {
+  background: #fff5f5; color: #c53030; border: 1px solid #feb2b2;
+}
+.kk-form-note { font-size: 12px; color: var(--text-light); margin-top: 12px; line-height: 1.5; }
+@media (max-width: 700px) {
+  .kk-form-fields { grid-template-columns: 1fr; }
+  .kk-emailform { padding: 24px 20px; }
 }`;
   document.head.appendChild(style);
+
+  // ─── Załaduj Cloudflare Turnstile SDK ───
+  (function() {
+    var s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v1/api.js?render=explicit';
+    s.async = true; s.defer = true;
+    document.head.appendChild(s);
+  })();
 
   // ─── Inject HTML ───
   var target = document.getElementById('konfero-konfigurator');
@@ -386,6 +454,36 @@
           Podane ceny są orientacyjne i stanowią punkt wyjścia do rozmowy.<br>
           Kwoty netto – do ceny należy doliczyć podatek VAT 23%.
         </div>
+      </div>
+      <div class="kk-emailform" id="kk-emailform">
+        <div class="kk-form-header">
+          <h3>Wyślij kalkulację i pobierz Rider techniczny</h3>
+          <p>Otrzymasz zestawienie kosztów na email wraz z <strong>Riderem technicznym Konfero</strong> – specyfikacją AV, sceny i zasilania, gotową do przekazania ekipie realizacyjnej.</p>
+        </div>
+        <div class="kk-form-fields">
+          <div class="kk-field">
+            <label class="kk-label" for="kk-f-name">Imię i nazwisko *</label>
+            <input class="kk-input" id="kk-f-name" type="text" placeholder="np. Anna Kowalska" autocomplete="name">
+          </div>
+          <div class="kk-field">
+            <label class="kk-label" for="kk-f-email">Adres email *</label>
+            <input class="kk-input" id="kk-f-email" type="email" placeholder="np. anna@firma.pl" autocomplete="email">
+          </div>
+          <div class="kk-field kk-field-full">
+            <label class="kk-label" for="kk-f-phone">Telefon <span class="kk-opt">(opcjonalnie)</span></label>
+            <input class="kk-input" id="kk-f-phone" type="tel" placeholder="np. 600 123 456" autocomplete="tel">
+          </div>
+          <div class="kk-field kk-field-full">
+            <label class="kk-label" for="kk-f-comment">Komentarz <span class="kk-opt">(opcjonalnie)</span></label>
+            <textarea class="kk-input kk-textarea" id="kk-f-comment" placeholder="Planowana data, liczba uczestników, pytania…" rows="3"></textarea>
+          </div>
+        </div>
+        <div id="kk-turnstile" style="margin-bottom:16px"></div>
+        <div class="kk-form-actions">
+          <button class="kk-btn kk-btn-p" id="kk-f-submit" onclick="kkSubmitEmail()">Wyślij kalkulację i pobierz Rider →</button>
+        </div>
+        <div class="kk-form-status" id="kk-form-status" style="display:none"></div>
+        <p class="kk-form-note">Twoje dane służą wyłącznie do przesłania kalkulacji i kontaktu w sprawie eventu. Nie trafiają do żadnych list mailingowych.</p>
       </div>
       <div class="kk-cta">
         <h3>Podoba Ci się ten setup?</h3>
@@ -688,12 +786,138 @@
     });
     if(n===1) rUpg();
     if(n===2) rMod();
-    if(n===3){ rSum(); document.getElementById('kk-float').classList.remove('vis'); }
+    if(n===3){ rSum(); resetEmailForm(); setTimeout(initTurnstile, 300); document.getElementById('kk-float').classList.remove('vis'); }
     uTotal();
     window.scrollTo({top:0,behavior:'smooth'});
   };
   window.kkGoIf=function(n){ if(n<S.step) kkGo(n); };
   window.kkFloatNext=function(){ if(S.step<3) kkGo(S.step+1); };
+
+  // ══════════════════════════════════════════
+  // EMAIL FORM
+  // ══════════════════════════════════════════
+  var _turnstileWidgetId = null;
+
+  function initTurnstile() {
+    if (typeof turnstile === 'undefined') return;
+    if (_turnstileWidgetId !== null) return;
+    _turnstileWidgetId = turnstile.render('#kk-turnstile', {
+      sitekey: TURNSTILE_KEY,
+      theme: 'light',
+      size: 'normal'
+    });
+  }
+
+  function resetEmailForm() {
+    ['kk-f-name','kk-f-email','kk-f-phone','kk-f-comment'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('kk-err'); }
+    });
+    if (_turnstileWidgetId !== null && typeof turnstile !== 'undefined') {
+      turnstile.reset(_turnstileWidgetId);
+    }
+    kkHideStatus();
+    var btn = document.getElementById('kk-f-submit');
+    if (btn) { btn.disabled = false; btn.textContent = 'Wyślij kalkulację i pobierz Rider →'; }
+  }
+
+  function kkShowStatus(type, msg) {
+    var el = document.getElementById('kk-form-status');
+    if (!el) return;
+    el.className = 'kk-form-status ' + type;
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function kkHideStatus() {
+    var el = document.getElementById('kk-form-status');
+    if (el) { el.style.display = 'none'; el.className = 'kk-form-status'; }
+  }
+
+  window.kkSubmitEmail = function() {
+    var name    = document.getElementById('kk-f-name').value.trim();
+    var email   = document.getElementById('kk-f-email').value.trim();
+    var phone   = document.getElementById('kk-f-phone').value.trim();
+    var comment = document.getElementById('kk-f-comment').value.trim();
+
+    // Walidacja wymaganych pól
+    var valid = true;
+    ['kk-f-name','kk-f-email'].forEach(function(id) {
+      var el = document.getElementById(id);
+      var empty = !el.value.trim();
+      el.classList.toggle('kk-err', empty);
+      if (empty) valid = false;
+    });
+    if (!valid) { kkShowStatus('err', 'Wypełnij wymagane pola.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      document.getElementById('kk-f-email').classList.add('kk-err');
+      kkShowStatus('err', 'Podaj prawidłowy adres email.');
+      return;
+    }
+
+    // Turnstile token
+    var token = (typeof turnstile !== 'undefined' && _turnstileWidgetId !== null)
+      ? turnstile.getResponse(_turnstileWidgetId) : '';
+    if (!token) {
+      kkShowStatus('err', 'Poczekaj chwilę na weryfikację anty-bot i spróbuj ponownie.');
+      return;
+    }
+
+    // Buduj payload z aktualną kalkulacją
+    var t = calc();
+    var p = getPkg();
+    var upgNames = Object.keys(S.upg).map(function(uid) {
+      var u = p.upg.find(function(x) { return x.id === uid; });
+      return u ? u.name : uid;
+    });
+    var modNames = Object.keys(S.mod).map(function(mid) {
+      var m = getMod(mid); return m ? m.name : mid;
+    });
+
+    var payload = {
+      turnstile_token: token,
+      name:        name,
+      email:       email,
+      phone:       phone,
+      comment:     comment,
+      package:     p ? p.name : '',
+      days:        S.days,
+      upgrades:    upgNames,
+      modules:     modNames,
+      total_netto: t.total
+    };
+
+    // Wyślij i obsłuż odpowiedź
+    var btn = document.getElementById('kk-f-submit');
+    btn.disabled = true;
+    btn.textContent = 'Wysyłanie…';
+    kkHideStatus();
+
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res) {
+      if (!res.ok) return res.json().then(function(e) { throw e; });
+      return res.json();
+    })
+    .then(function() {
+      kkShowStatus('ok',
+        '✓ Wysłano! Sprawdź skrzynkę – kalkulacja i Rider techniczny już są u Ciebie. Odezwiemy się wkrótce.');
+      btn.textContent = 'Wysłano ✓';
+    })
+    .catch(function(err) {
+      var msg = (err && err.error) ? err.error
+        : 'Coś poszło nie tak. Spróbuj ponownie lub napisz bezpośrednio na kontakt@konfero.pl';
+      kkShowStatus('err', msg);
+      btn.disabled = false;
+      btn.textContent = 'Wyślij kalkulację i pobierz Rider →';
+      if (typeof turnstile !== 'undefined' && _turnstileWidgetId !== null) {
+        turnstile.reset(_turnstileWidgetId);
+      }
+    });
+  };
 
   // INIT
   rPkgs(); rDays();
