@@ -459,7 +459,7 @@
           Kwoty netto – do ceny należy doliczyć podatek VAT 23%.
         </div>
       </div>
-      <div class="kk-emailform" id="kk-emailform">
+      <div class="kk-emailform" id="kk-emailform" style="display:none">
         <div class="kk-form-header">
           <h3>Wyślij kalkulację i pobierz Rider techniczny</h3>
           <p>Otrzymasz zestawienie kosztów na email wraz z <strong>Riderem technicznym Konfero</strong> – specyfikacją AV, sceny i zasilania, gotową do przekazania ekipie realizacyjnej.</p>
@@ -788,7 +788,7 @@
     });
     if(n===1) rUpg();
     if(n===2) rMod();
-    if(n===3){ rSum(); if(EMAIL_FORM_ENABLED){ resetEmailForm(); setTimeout(initTurnstile, 300); } document.getElementById('kk-emailform').style.display=EMAIL_FORM_ENABLED?'':'none'; document.getElementById('kk-float').classList.remove('vis'); }
+    if(n===3){ rSum(); if(EMAIL_FORM_ENABLED){ document.getElementById('kk-emailform').style.display=''; resetEmailForm(); setTimeout(initTurnstile, 300); } document.getElementById('kk-float').classList.remove('vis'); }
     uTotal();
     window.scrollTo({top:0,behavior:'smooth'});
   };
