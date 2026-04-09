@@ -11,6 +11,8 @@
   'use strict';
 
   // ─── Konfiguracja wysyłki emailem ───
+  // Ustaw na true gdy n8n workflow i Turnstile są skonfigurowane
+  var EMAIL_FORM_ENABLED = false;
   // Test:  'https://flow.rocksoft.co/webhook-test/konfero-kalkulacja'
   // Prod:  'https://flow.rocksoft.co/webhook/konfero-kalkulacja'
   var WEBHOOK_URL   = 'https://flow.rocksoft.co/webhook/konfero-kalkulacja';
@@ -352,13 +354,15 @@
 }`;
   document.head.appendChild(style);
 
-  // ─── Załaduj Cloudflare Turnstile SDK ───
-  (function() {
-    var s = document.createElement('script');
-    s.src = 'https://challenges.cloudflare.com/turnstile/v1/api.js?render=explicit';
-    s.async = true; s.defer = true;
-    document.head.appendChild(s);
-  })();
+  // ─── Załaduj Cloudflare Turnstile SDK (tylko gdy formularz aktywny) ───
+  if (EMAIL_FORM_ENABLED) {
+    (function() {
+      var s = document.createElement('script');
+      s.src = 'https://challenges.cloudflare.com/turnstile/v1/api.js?render=explicit';
+      s.async = true; s.defer = true;
+      document.head.appendChild(s);
+    })();
+  }
 
   // ─── Inject HTML ───
   var target = document.getElementById('konfero-konfigurator');
@@ -784,7 +788,7 @@
     });
     if(n===1) rUpg();
     if(n===2) rMod();
-    if(n===3){ rSum(); resetEmailForm(); setTimeout(initTurnstile, 300); document.getElementById('kk-float').classList.remove('vis'); }
+    if(n===3){ rSum(); if(EMAIL_FORM_ENABLED){ resetEmailForm(); setTimeout(initTurnstile, 300); } document.getElementById('kk-emailform').style.display=EMAIL_FORM_ENABLED?'':'none'; document.getElementById('kk-float').classList.remove('vis'); }
     uTotal();
     window.scrollTo({top:0,behavior:'smooth'});
   };
