@@ -516,7 +516,7 @@
   var PKGS = [
     {
       id:'konferencja', icon:'🎤', ic:'ic-conf',
-      name:'Konferencyjna',
+      name:'Konferencyjny',
       sub:'Konferencje, szkolenia, zjazdy, panele – główny produkt Konfero.',
       inc:['Sala Diament (560 m², do 450 osób)','Ekran LED 4×8 m + nagłośnienie','Oświetlenie LED + regulacja','Strefa wypoczynku 150 m²','Hol główny, parking (110 miejsc), Wi-Fi'],
       comp:[{n:'Sala Diament 560 m²',v:4500},{n:'Ekran LED 4×8 m',v:2500},{n:'Nagłośnienie konferencyjne',v:1500},{n:'Oświetlenie LED sceny',v:1000}],
@@ -530,7 +530,7 @@
     },
     {
       id:'bankiet', icon:'🥂', ic:'ic-bank',
-      name:'Bankietowa',
+      name:'Bankietowy',
       sub:'Bankiety firmowe, studniówki, gale – wieczory, które zapamiętasz.',
       inc:['Sala Diament (bankietowo, do 300 os.)','Stoły i obrusy','Nagłośnienie + oświetlenie standard','Kawiarnia Gold (120 miejsc, balkon)','Strefa wypoczynku 150 m², Hol główny'],
       comp:[{n:'Sala Diament (bankiet)',v:4500},{n:'Stoły i obrusy',v:1500},{n:'Nagłośnienie + oświetlenie',v:2000},{n:'Kawiarnia Gold',v:1500}],
@@ -545,7 +545,7 @@
     },
     {
       id:'event', icon:'🎸', ic:'ic-event',
-      name:'Eventowa',
+      name:'Rozrywkowy',
       sub:'Eventy firmowe, gale, wigilijki, imprezy integracyjne – energia i emocje.',
       inc:['Sala Diament (560 m², do 450 osób)','Ekran LED 4×8 m + nagłośnienie','Oświetlenie LED + regulacja','Strefa wypoczynku 150 m²','Hol główny, parking (110 miejsc), Wi-Fi'],
       comp:[{n:'Sala Diament 560 m²',v:4500},{n:'Ekran LED 4×8 m',v:2500},{n:'Nagłośnienie konferencyjne',v:1500},{n:'Oświetlenie LED sceny',v:1000}],
@@ -558,15 +558,13 @@
     },
     {
       id:'plener', icon:'🌿', ic:'ic-plen',
-      name:'Plenerowa',
+      name:'Plenerowy',
       sub:'Pikniki firmowe, festiwale na świeżym powietrzu – Twoje wydarzenie pod chmurką.',
       inc:['Tereny trawiaste, lasek, boiska','Podłączenie do prądu (food trucki)','Strefa wypoczynku wewnątrz','Hol główny wewnątrz','Toalety wewnątrz'],
       comp:[{n:'Tereny zewnętrzne + boiska',v:3000},{n:'Podłączenie do prądu',v:1000},{n:'Strefa wypoczynku wewnątrz',v:1500},{n:'Hol główny + toalety',v:1000}],
       base:6000,
       upg:[
         {id:'u-diament',name:'Sala Diament na prelekcje / wystawy',desc:'Dodatkowa przestrzeń wewnątrz – na panele, prezentacje, wystawy.',price:3000,unit:'zł / dzień'},
-        {id:'u-kino',name:'Kino letnie na świeżym powietrzu',desc:'Projekcja outdoorowa – filmy, prezentacje, transmisje pod gwiazdami.',price:2500,unit:'zł'},
-        {id:'u-tent',name:'Namiot na boisku (~100 osób)',desc:'Zadaszenie terenu zewnętrznego 6×12 m – plan B na niepogodę lub strefa VIP.',price:6000,unit:'zł'},
         {id:'u-sauna',name:'Sauna – 2 godziny (do 12 osób)',desc:'Relaks po wydarzeniu – idealna na eventy integracyjne.',price:600,unit:'zł'}
       ]
     }
@@ -675,8 +673,8 @@
           +'<button class="kk-qbtn" onclick="kkChgQ(\''+m.id+'\','+m.qs+')">+</button>'
           +'<span class="kk-qlbl">'+m.ql+'</span></div>':'')
         +'</div>'
-        +'<div class="kk-aprice"><div class="a">'+(sel&&m.hq?fp(m.price*q):fp(m.price))+'</div>'
-        +'<div class="u">'+m.unit+(sel&&m.hq?' × '+q:'')+'</div></div>'
+        +'<div class="kk-aprice"><div class="a">'+fp(m.price)+'</div>'
+        +'<div class="u">'+m.unit+'</div></div>'
         +'</div>';
     }).join('');
   }
