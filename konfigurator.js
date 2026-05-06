@@ -819,6 +819,14 @@
   var _turnstileWidgetId = null;
   var _turnstileToken = '';
 
+  function setSubmitReady(ready) {
+    var btn = document.getElementById('kk-f-submit');
+    if (!btn) return;
+    btn.disabled = !ready;
+    btn.style.opacity = ready ? '' : '0.5';
+    btn.style.cursor = ready ? '' : 'not-allowed';
+  }
+
   function initTurnstile() {
     // Jeśli SDK jeszcze się ładuje – spróbuj ponownie za 500ms
     if (typeof turnstile === 'undefined') {
@@ -826,13 +834,14 @@
       return;
     }
     if (_turnstileWidgetId !== null) return;
+    setSubmitReady(false);
     _turnstileWidgetId = turnstile.render('#kk-turnstile', {
       sitekey: TURNSTILE_KEY,
       theme: 'light',
       size: 'normal',
-      callback: function(token) { _turnstileToken = token; },
-      'expired-callback': function() { _turnstileToken = ''; },
-      'error-callback': function() { _turnstileToken = ''; }
+      callback: function(token) { _turnstileToken = token; setSubmitReady(true); },
+      'expired-callback': function() { _turnstileToken = ''; setSubmitReady(false); },
+      'error-callback': function() { _turnstileToken = ''; setSubmitReady(false); }
     });
   }
 
@@ -844,10 +853,12 @@
     _turnstileToken = '';
     if (_turnstileWidgetId !== null && typeof turnstile !== 'undefined') {
       turnstile.reset(_turnstileWidgetId);
+      setSubmitReady(false);
     }
     kkHideStatus();
     var btn = document.getElementById('kk-f-submit');
-    if (btn) { btn.disabled = false; btn.textContent = 'Wyślij kalkulację i pobierz Rider →'; }
+    if (btn) { btn.textContent = 'Wyślij kalkulację i pobierz Rider →'; }
+    setSubmitReady(false);
   }
 
   function kkShowStatus(type, msg) {
