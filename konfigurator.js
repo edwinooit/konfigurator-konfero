@@ -15,7 +15,7 @@
   var EMAIL_FORM_ENABLED = true;
   // Test:  'https://flow.rocksoft.co/webhook-test/konfero-kalkulacja'
   // Prod:  'https://flow.rocksoft.co/webhook/konfero-kalkulacja'
-  var WEBHOOK_URL   = 'https://flow.rocksoft.co/webhook/konfero-kalkulacja';
+  var WEBHOOK_URL   = 'https://usebasin.com/f/3e36b05173de';
   var TURNSTILE_KEY = '0x4AAAAAADKUx21wwJqZadWV';
 
   // ─── Inject CSS ───
@@ -913,18 +913,32 @@
       var m = getMod(mid); return m ? m.name : mid;
     });
 
-    var payload = {
-      turnstile_token: token,
-      name:        name,
-      email:       email,
-      phone:       phone,
-      comment:     comment,
-      package:     p ? p.name : '',
-      days:        S.days,
-      upgrades:    upgNames,
-      modules:     modNames,
-      total_netto: t.total
-    };
+    var daysLabel = S.days === 1 ? '1 dzień' : S.days + ' dni';
+    var totalNetto = t.total;
+    var totalStr  = totalNetto.toLocaleString('pl-PL') + ' zł netto';
+    var bruttoStr = Math.round(totalNetto * 1.23).toLocaleString('pl-PL') + ' zł brutto';
+
+    var lines = ['Pakiet: ' + (p ? p.name : '') + ' × ' + daysLabel, ''];
+    if (upgNames.length) { lines.push('Dodatki:'); upgNames.forEach(function(u) { lines.push('  - ' + u); }); lines.push(''); }
+    if (modNames.length) { lines.push('Moduły:');  modNames.forEach(function(m) { lines.push('  - ' + m); }); lines.push(''); }
+    lines.push('Razem netto:   ' + totalStr);
+    lines.push('VAT 23%:       ' + Math.round(totalNetto * 0.23).toLocaleString('pl-PL') + ' zł');
+    lines.push('Razem brutto:  ' + bruttoStr);
+    lines.push('');
+    lines.push('Ceny orientacyjne. Ostateczna wycena po konsultacji z Konfero.');
+
+    var params = new URLSearchParams({
+      'cf-turnstile-response': token,
+      name:          name,
+      email:         email,
+      phone:         phone || '(nie podano)',
+      comment:       comment || '(brak)',
+      package:       p ? p.name : '',
+      days:          daysLabel,
+      total_netto:   totalStr,
+      total_brutto:  bruttoStr,
+      summary:       lines.join('\n')
+    });
 
     // Wyślij i obsłuż odpowiedź
     var btn = document.getElementById('kk-f-submit');
@@ -934,8 +948,8 @@
 
     fetch(WEBHOOK_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+      body: params.toString()
     })
     .then(function(res) {
       if (!res.ok) return res.json().then(function(e) { throw e; });
