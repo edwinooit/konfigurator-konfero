@@ -896,12 +896,7 @@
       return;
     }
 
-    // Turnstile token (zapisany przez callback przy załadowaniu widgetu)
     var token = _turnstileToken;
-    if (!token) {
-      kkShowStatus('err', 'Poczekaj chwilę na weryfikację anty-bot i spróbuj ponownie.');
-      return;
-    }
 
     // Buduj payload z aktualną kalkulacją
     var t = calc();
