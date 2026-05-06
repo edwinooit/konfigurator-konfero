@@ -12,11 +12,11 @@
 
   // ─── Konfiguracja wysyłki emailem ───
   // Ustaw na true gdy n8n workflow i Turnstile są skonfigurowane
-  var EMAIL_FORM_ENABLED = false;
+  var EMAIL_FORM_ENABLED = true;
   // Test:  'https://flow.rocksoft.co/webhook-test/konfero-kalkulacja'
   // Prod:  'https://flow.rocksoft.co/webhook/konfero-kalkulacja'
   var WEBHOOK_URL   = 'https://flow.rocksoft.co/webhook/konfero-kalkulacja';
-  var TURNSTILE_KEY = 'WKLEJ_TUTAJ_SITE_KEY'; // z dash.cloudflare.com → Turnstile
+  var TURNSTILE_KEY = '0x4AAAAAADKUx21wwJqZadWV';
 
   // ─── Inject CSS ───
   var style = document.createElement('style');
@@ -308,10 +308,20 @@
   padding: 36px 32px;
 }
 .kk-form-header { margin-bottom: 28px; }
+.kk-form-header-inner {
+  display: flex; align-items: center; gap: 28px;
+}
+.kk-form-header-text { flex: 1; min-width: 0; }
 .kk-form-header h3 {
   font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 8px;
 }
 .kk-form-header p { font-size: 14px; color: var(--text-light); line-height: 1.6; }
+.kk-form-header-img { flex-shrink: 0; width: 200px; }
+.kk-form-header-img img { width: 100%; height: auto; display: block; }
+@media (max-width: 600px) {
+  .kk-form-header-inner { flex-direction: column-reverse; gap: 16px; }
+  .kk-form-header-img { width: 160px; margin: 0 auto; }
+}
 .kk-form-fields {
   display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
 }
@@ -461,8 +471,16 @@
       </div>
       <div class="kk-emailform" id="kk-emailform" style="display:none">
         <div class="kk-form-header">
-          <h3>Wyślij kalkulację i pobierz Rider techniczny</h3>
-          <p>Otrzymasz zestawienie kosztów na email wraz z <strong>Riderem technicznym Konfero</strong> – specyfikacją AV, sceny i zasilania, gotową do przekazania ekipie realizacyjnej.</p>
+          <div class="kk-form-header-inner">
+            <div class="kk-form-header-text">
+              <h3>Wyślij kalkulację i pobierz Rider techniczny</h3>
+              <p>Otrzymasz zestawienie kosztów na email wraz z <strong>Riderem technicznym Konfero</strong> – specyfikacją AV, sceny i zasilania, gotową do przekazania ekipie realizacyjnej.</p>
+            </div>
+            <div class="kk-form-header-img">
+              <img src="https://cdn.prod.website-files.com/6759a558090e53f37894aed8/69fb9d90680b8f3765e40543_Magazines%20Mockup%20Opened%20And%20Closed%20Poster.avif"
+                   alt="Rider techniczny Konfero" loading="lazy">
+            </div>
+          </div>
         </div>
         <div class="kk-form-fields">
           <div class="kk-field">
