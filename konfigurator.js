@@ -500,6 +500,7 @@
             <textarea class="kk-input kk-textarea" id="kk-f-comment" placeholder="Planowana data, liczba uczestników, pytania…" rows="3"></textarea>
           </div>
         </div>
+        <div style="position:absolute;left:-9999px;height:0;overflow:hidden" aria-hidden="true"><input type="text" name="stanowisko" tabindex="-1" autocomplete="off" value=""></div>
         <div id="kk-turnstile" style="margin-bottom:16px"></div>
         <div class="kk-form-actions">
           <button class="kk-btn kk-btn-p" id="kk-f-submit" onclick="kkSubmitEmail()">Wyślij kalkulację i pobierz Rider →</button>
@@ -929,6 +930,7 @@
 
     var params = new URLSearchParams({
       'cf-turnstile-response': token,
+      stanowisko:    '',
       name:          name,
       email:         email,
       phone:         phone || '(nie podano)',
