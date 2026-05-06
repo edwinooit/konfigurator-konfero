@@ -817,14 +817,22 @@
   // EMAIL FORM
   // ══════════════════════════════════════════
   var _turnstileWidgetId = null;
+  var _turnstileToken = '';
 
   function initTurnstile() {
-    if (typeof turnstile === 'undefined') return;
+    // Jeśli SDK jeszcze się ładuje – spróbuj ponownie za 500ms
+    if (typeof turnstile === 'undefined') {
+      setTimeout(initTurnstile, 500);
+      return;
+    }
     if (_turnstileWidgetId !== null) return;
     _turnstileWidgetId = turnstile.render('#kk-turnstile', {
       sitekey: TURNSTILE_KEY,
       theme: 'light',
-      size: 'normal'
+      size: 'normal',
+      callback: function(token) { _turnstileToken = token; },
+      'expired-callback': function() { _turnstileToken = ''; },
+      'error-callback': function() { _turnstileToken = ''; }
     });
   }
 
@@ -833,6 +841,7 @@
       var el = document.getElementById(id);
       if (el) { el.value = ''; el.classList.remove('kk-err'); }
     });
+    _turnstileToken = '';
     if (_turnstileWidgetId !== null && typeof turnstile !== 'undefined') {
       turnstile.reset(_turnstileWidgetId);
     }
@@ -875,9 +884,8 @@
       return;
     }
 
-    // Turnstile token
-    var token = (typeof turnstile !== 'undefined' && _turnstileWidgetId !== null)
-      ? turnstile.getResponse(_turnstileWidgetId) : '';
+    // Turnstile token (zapisany przez callback przy załadowaniu widgetu)
+    var token = _turnstileToken;
     if (!token) {
       kkShowStatus('err', 'Poczekaj chwilę na weryfikację anty-bot i spróbuj ponownie.');
       return;
