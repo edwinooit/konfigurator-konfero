@@ -808,7 +808,7 @@
     if(n===2) rMod();
     if(n===3){ rSum(); if(EMAIL_FORM_ENABLED){ document.getElementById('kk-emailform').style.display=''; resetEmailForm(); setTimeout(initTurnstile, 300); } document.getElementById('kk-float').classList.remove('vis'); }
     uTotal();
-    window.scrollTo({top:0,behavior:'smooth'});
+    var el=document.getElementById('konfero-konfigurator'); if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); }
   };
   window.kkGoIf=function(n){ if(n<S.step) kkGo(n); };
   window.kkFloatNext=function(){ if(S.step<3) kkGo(S.step+1); };
