@@ -12,11 +12,11 @@
 
   // ─── Konfiguracja wysyłki emailem ───
   // Ustaw na true gdy n8n workflow i Turnstile są skonfigurowane
-  var EMAIL_FORM_ENABLED = false;
+  var EMAIL_FORM_ENABLED = true;
   // Test:  'https://flow.rocksoft.co/webhook-test/konfero-kalkulacja'
   // Prod:  'https://flow.rocksoft.co/webhook/konfero-kalkulacja'
   var WEBHOOK_URL   = 'https://flow.rocksoft.co/webhook/konfero-kalkulacja';
-  var TURNSTILE_KEY = 'WKLEJ_TUTAJ_SITE_KEY'; // z dash.cloudflare.com → Turnstile
+  var TURNSTILE_KEY = '0x4AAAAAADKUx21wwJqZadWV';
 
   // ─── Inject CSS ───
   var style = document.createElement('style');
