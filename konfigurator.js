@@ -508,7 +508,7 @@
           <button class="kk-btn kk-btn-p" id="kk-f-submit" onclick="kkSubmitEmail()">Wyślij kalkulację i pobierz Rider →</button>
         </div>
         <div class="kk-form-status" id="kk-form-status" style="display:none"></div>
-        <p class="kk-form-note">Twoje dane służą wyłącznie do przesłania kalkulacji i kontaktu w sprawie eventu. Nie trafiają do żadnych list mailingowych.</p>
+        <p class="kk-form-note">Twoje dane służą wyłącznie do przesłania kalkulacji i kontaktu w sprawie eventu.</p>
       </div>
 
       <div class="kk-nav" style="justify-content:center">
@@ -943,7 +943,7 @@
         : 'Coś poszło nie tak. Spróbuj ponownie lub napisz bezpośrednio na kontakt@konfero.pl';
       kkShowStatus('err', msg);
       btn.disabled = false;
-      btn.textContent = 'Wyślij kalkulację i pobierz Rider →';
+      btn.textContent = 'Wyślij kalkulację i pobierz Rider';
     });
   };
 
