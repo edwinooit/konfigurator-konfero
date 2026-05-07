@@ -505,7 +505,7 @@
         <div id="kk-turnstile" style="margin-bottom:12px"></div>
 
         <div class="kk-form-actions">
-          <button class="kk-btn kk-btn-p" id="kk-f-submit" onclick="kkSubmitEmail()">Wyślij kalkulację i pobierz Rider →</button>
+          <button class="kk-btn kk-btn-p" id="kk-f-submit" onclick="kkSubmitEmail()">Wyślij kalkulację i pobierz Rider</button>
         </div>
         <div class="kk-form-status" id="kk-form-status" style="display:none"></div>
         <p class="kk-form-note">Twoje dane służą wyłącznie do przesłania kalkulacji i kontaktu w sprawie eventu.</p>
