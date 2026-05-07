@@ -16,6 +16,17 @@
   // Test:  'https://flow.rocksoft.co/webhook-test/konfero-kalkulacja'
   // Prod:  'https://flow.rocksoft.co/webhook/konfero-kalkulacja'
   var WEBHOOK_URL   = 'https://usebasin.com/f/3e36b05173de';
+  var TURNSTILE_KEY = '0x4AAAAAADKUx21wwJqZadWV';
+
+  // ─── Załaduj Cloudflare Turnstile SDK (nieblokujący sygnał antyspamowy) ───
+  if (EMAIL_FORM_ENABLED) {
+    (function() {
+      var s = document.createElement('script');
+      s.src = 'https://challenges.cloudflare.com/turnstile/v1/api.js?render=explicit';
+      s.async = true; s.defer = true;
+      document.head.appendChild(s);
+    })();
+  }
 
   // ─── Inject CSS ───
   var style = document.createElement('style');
@@ -491,6 +502,7 @@
           </div>
         </div>
         <div style="position:absolute;left:-9999px;height:0;overflow:hidden" aria-hidden="true"><input type="text" name="stanowisko" tabindex="-1" autocomplete="off" value=""></div>
+        <div id="kk-turnstile" style="margin-bottom:12px"></div>
 
         <div class="kk-form-actions">
           <button class="kk-btn kk-btn-p" id="kk-f-submit" onclick="kkSubmitEmail()">Wyślij kalkulację i pobierz Rider →</button>
@@ -806,6 +818,23 @@
 
   // ══════════════════════════════════════════
   // EMAIL FORM
+  // Turnstile – nieblokujący sygnał antyspamowy (token wysyłany jeśli dostępny)
+  var _tsWidgetId = null;
+  var _tsToken = '';
+
+  function initTurnstile() {
+    if (typeof turnstile === 'undefined') { setTimeout(initTurnstile, 500); return; }
+    if (_tsWidgetId !== null) { turnstile.reset(_tsWidgetId); _tsToken = ''; return; }
+    _tsWidgetId = turnstile.render('#kk-turnstile', {
+      sitekey: TURNSTILE_KEY,
+      theme: 'light',
+      size: 'normal',
+      callback:           function(t) { _tsToken = t; },
+      'expired-callback': function()  { _tsToken = ''; },
+      'error-callback':   function()  { _tsToken = ''; }
+    });
+  }
+
   function resetEmailForm() {
     ['kk-f-name','kk-f-email','kk-f-phone','kk-f-comment'].forEach(function(id) {
       var el = document.getElementById(id);
@@ -814,6 +843,7 @@
     kkHideStatus();
     var btn = document.getElementById('kk-f-submit');
     if (btn) { btn.disabled = false; btn.textContent = 'Wyślij kalkulację i pobierz Rider →'; }
+    setTimeout(initTurnstile, 300);
   }
 
   function kkShowStatus(type, msg) {
@@ -877,6 +907,7 @@
     lines.push('Ceny orientacyjne. Ostateczna wycena po konsultacji z Konfero.');
 
     var params = new URLSearchParams({
+      'cf-turnstile-response': _tsToken,
       stanowisko:    '',
       name:          name,
       email:         email,
