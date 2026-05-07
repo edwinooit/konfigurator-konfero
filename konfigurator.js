@@ -18,6 +18,16 @@
   var WEBHOOK_URL   = 'https://usebasin.com/f/3e36b05173de';
   var TURNSTILE_KEY = '0x4AAAAAADKUx21wwJqZadWV';
 
+  // ─── Załaduj Cloudflare Turnstile SDK (nieblokujący sygnał antyspamowy) ───
+  if (EMAIL_FORM_ENABLED) {
+    (function() {
+      var s = document.createElement('script');
+      s.src = 'https://challenges.cloudflare.com/turnstile/v1/api.js?render=explicit';
+      s.async = true; s.defer = true;
+      document.head.appendChild(s);
+    })();
+  }
+
   // ─── Inject CSS ───
   var style = document.createElement('style');
   style.textContent = `.kk * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -364,15 +374,6 @@
 }`;
   document.head.appendChild(style);
 
-  // ─── Załaduj Cloudflare Turnstile SDK (tylko gdy formularz aktywny) ───
-  if (EMAIL_FORM_ENABLED) {
-    (function() {
-      var s = document.createElement('script');
-      s.src = 'https://challenges.cloudflare.com/turnstile/v1/api.js?render=explicit';
-      s.async = true; s.defer = true;
-      document.head.appendChild(s);
-    })();
-  }
 
   // ─── Inject HTML ───
   var target = document.getElementById('konfero-konfigurator');
@@ -501,7 +502,8 @@
           </div>
         </div>
         <div style="position:absolute;left:-9999px;height:0;overflow:hidden" aria-hidden="true"><input type="text" name="stanowisko" tabindex="-1" autocomplete="off" value=""></div>
-        <div id="kk-turnstile" style="margin-bottom:16px"></div>
+        <div id="kk-turnstile" style="margin-bottom:12px"></div>
+
         <div class="kk-form-actions">
           <button class="kk-btn kk-btn-p" id="kk-f-submit" onclick="kkSubmitEmail()">Wyślij kalkulację i pobierz Rider →</button>
         </div>
@@ -807,7 +809,7 @@
     });
     if(n===1) rUpg();
     if(n===2) rMod();
-    if(n===3){ rSum(); if(EMAIL_FORM_ENABLED){ document.getElementById('kk-emailform').style.display=''; resetEmailForm(); setTimeout(initTurnstile, 300); } document.getElementById('kk-float').classList.remove('vis'); }
+    if(n===3){ rSum(); if(EMAIL_FORM_ENABLED){ document.getElementById('kk-emailform').style.display=''; resetEmailForm(); } document.getElementById('kk-float').classList.remove('vis'); }
     uTotal();
     var el=document.getElementById('konfero-konfigurator'); if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); }
   };
@@ -816,33 +818,20 @@
 
   // ══════════════════════════════════════════
   // EMAIL FORM
-  // ══════════════════════════════════════════
-  var _turnstileWidgetId = null;
-  var _turnstileToken = '';
-
-  function setSubmitReady(ready) {
-    var btn = document.getElementById('kk-f-submit');
-    if (!btn) return;
-    btn.disabled = !ready;
-    btn.style.opacity = ready ? '' : '0.5';
-    btn.style.cursor = ready ? '' : 'not-allowed';
-  }
+  // Turnstile – nieblokujący sygnał antyspamowy (token wysyłany jeśli dostępny)
+  var _tsWidgetId = null;
+  var _tsToken = '';
 
   function initTurnstile() {
-    // Jeśli SDK jeszcze się ładuje – spróbuj ponownie za 500ms
-    if (typeof turnstile === 'undefined') {
-      setTimeout(initTurnstile, 500);
-      return;
-    }
-    if (_turnstileWidgetId !== null) return;
-    setSubmitReady(false);
-    _turnstileWidgetId = turnstile.render('#kk-turnstile', {
+    if (typeof turnstile === 'undefined') { setTimeout(initTurnstile, 500); return; }
+    if (_tsWidgetId !== null) { turnstile.reset(_tsWidgetId); _tsToken = ''; return; }
+    _tsWidgetId = turnstile.render('#kk-turnstile', {
       sitekey: TURNSTILE_KEY,
       theme: 'light',
       size: 'normal',
-      callback: function(token) { _turnstileToken = token; setSubmitReady(true); },
-      'expired-callback': function() { _turnstileToken = ''; setSubmitReady(false); },
-      'error-callback': function() { _turnstileToken = ''; setSubmitReady(false); }
+      callback:           function(t) { _tsToken = t; },
+      'expired-callback': function()  { _tsToken = ''; },
+      'error-callback':   function()  { _tsToken = ''; }
     });
   }
 
@@ -851,15 +840,10 @@
       var el = document.getElementById(id);
       if (el) { el.value = ''; el.classList.remove('kk-err'); }
     });
-    _turnstileToken = '';
-    if (_turnstileWidgetId !== null && typeof turnstile !== 'undefined') {
-      turnstile.reset(_turnstileWidgetId);
-      setSubmitReady(false);
-    }
     kkHideStatus();
     var btn = document.getElementById('kk-f-submit');
-    if (btn) { btn.textContent = 'Wyślij kalkulację i pobierz Rider →'; }
-    setSubmitReady(false);
+    if (btn) { btn.disabled = false; btn.textContent = 'Wyślij kalkulację i pobierz Rider →'; }
+    setTimeout(initTurnstile, 300);
   }
 
   function kkShowStatus(type, msg) {
@@ -896,7 +880,6 @@
       return;
     }
 
-    var token = _turnstileToken;
 
     // Buduj payload z aktualną kalkulacją
     var t = calc();
@@ -924,7 +907,7 @@
     lines.push('Ceny orientacyjne. Ostateczna wycena po konsultacji z Konfero.');
 
     var params = new URLSearchParams({
-      'cf-turnstile-response': token,
+      'cf-turnstile-response': _tsToken,
       stanowisko:    '',
       name:          name,
       email:         email,
@@ -963,9 +946,6 @@
       kkShowStatus('err', msg);
       btn.disabled = false;
       btn.textContent = 'Wyślij kalkulację i pobierz Rider →';
-      if (typeof turnstile !== 'undefined' && _turnstileWidgetId !== null) {
-        turnstile.reset(_turnstileWidgetId);
-      }
     });
   };
 
