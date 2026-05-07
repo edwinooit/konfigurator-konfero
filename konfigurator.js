@@ -330,7 +330,7 @@
 .kk-form-header-img img { width: 100%; height: auto; display: block; }
 @media (max-width: 600px) {
   .kk-form-header-inner { flex-direction: column-reverse; gap: 16px; }
-  .kk-form-header-img { width: 160px; margin: 0 auto; }
+  .kk-form-header-img { width: 100%; }
 }
 .kk-form-fields {
   display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
@@ -510,11 +510,7 @@
         <div class="kk-form-status" id="kk-form-status" style="display:none"></div>
         <p class="kk-form-note">Twoje dane służą wyłącznie do przesłania kalkulacji i kontaktu w sprawie eventu. Nie trafiają do żadnych list mailingowych.</p>
       </div>
-      <div class="kk-cta">
-        <h3>Podoba Ci się ten setup?</h3>
-        <p>Skontaktuj się z nami – omówimy szczegóły, dopasujemy ofertę i zarezerwujemy termin dla Ciebie.</p>
-        <a href="/kontakt" class="kk-btn kk-btn-cta">Skontaktuj się →</a>
-      </div>
+
       <div class="kk-nav" style="justify-content:center">
         <button class="kk-btn kk-btn-g" onclick="kkGo(2)">← Wróć do konfiguracji</button>
       </div>
