@@ -929,16 +929,18 @@
     fetch(WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+      redirect: 'manual',
       body: params.toString()
     })
     .then(function(res) {
-      if (!res.ok) return res.json().then(function(e) { throw e; });
-      return res.json();
-    })
-    .then(function() {
-      kkShowStatus('ok',
-        '✓ Wysłano! Sprawdź skrzynkę – kalkulacja i Rider techniczny już są u Ciebie. Odezwiemy się wkrótce.');
-      btn.textContent = 'Wysłano ✓';
+      // Basin zwraca 302 redirect przy sukcesie (opaqueredirect) lub 200 JSON
+      if (res.type === 'opaqueredirect' || res.ok) {
+        kkShowStatus('ok',
+          '✓ Wysłano! Sprawdź skrzynkę – kalkulacja i Rider techniczny już są u Ciebie. Odezwiemy się wkrótce.');
+        btn.textContent = 'Wysłano ✓';
+        return;
+      }
+      throw {};
     })
     .catch(function(err) {
       var msg = (err && err.error) ? err.error
