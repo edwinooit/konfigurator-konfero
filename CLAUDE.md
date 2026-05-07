@@ -67,10 +67,9 @@ Ceny netto + VAT 23%.
 3. **Nie promować cateringu jako samodzielnej usługi** – catering jest tylko modułem w ramach eventu (ludzie dzwonili zamawiać jedzenie, a to nie jest ich profil)
 4. **Obiekt na wyłączność** – to kluczowy wyróżnik vs hotele
 5. **Dekoracja sali** – elementy dostępne na obiekcie, BEZ zakupu dodatkowych materiałów
-6. **Namiot** – opis „~100 osób", wymiary 6×12 m
-7. **Pojemność max**: 550 osób (teatralnie), 350 biesiadnie, 300 bankietowo
-8. **Ekran LED**: 4×8 m (stały, nie wynajmowany)
-9. **Scena**: 12,5×4,5 m z zapleczem backstage
+6. **Pojemność max**: 450 osób (teatralnie), 300 bankietowo
+7. **Ekran LED**: 4×8 m (stały, nie wynajmowany)
+8. **Scena**: 12,5×4,5 m z zapleczem backstage
 
 ## Kontakt Konfero
 
